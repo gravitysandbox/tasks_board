@@ -22,6 +22,13 @@ class _TaskListState extends State<TaskList> {
     taskDescriptionController.clear();
   }
 
+  void updateTask(Task task) {
+    task.title = taskTitleController.text;
+    task.description = taskDescriptionController.text;
+    taskTitleController.clear();
+    taskDescriptionController.clear();
+  }
+
   void completeTask(int index) {
     tasks[index].isComplete == false
         ? tasks[index].isComplete = true
@@ -115,7 +122,104 @@ class _TaskListState extends State<TaskList> {
                               completeTask(index);
                             });
                           },
-                          onLongPress: () {},
+                          onLongPress: () {
+                            taskTitleController.text = tasks[index].title!;
+                            taskDescriptionController.text =
+                                tasks[index].description!;
+                            showDialog(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 25.0,
+                                  vertical: 20.0,
+                                ),
+                                backgroundColor: Colors.grey[800],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                title: Row(
+                                  children: [
+                                    const Text(
+                                      'Edit Todo',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.cancel,
+                                        color: Colors.grey,
+                                        size: 30.0,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                  ],
+                                ),
+                                children: [
+                                  const Divider(),
+                                  TextFormField(
+                                    controller: taskTitleController,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      height: 1.5,
+                                      color: Colors.white,
+                                    ),
+                                    autofocus: true,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Title',
+                                      hintStyle:
+                                          TextStyle(color: Colors.white70),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    controller: taskDescriptionController,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      height: 1.5,
+                                      color: Colors.white,
+                                    ),
+                                    autofocus: true,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Description',
+                                      hintStyle:
+                                          TextStyle(color: Colors.white70),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20.0),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 50.0,
+                                    child: TextButton(
+                                      child: const Text('Save'),
+                                      style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        primary: Colors.white,
+                                      ),
+                                      onPressed: () async {
+                                        if (taskTitleController
+                                                .text.isNotEmpty &&
+                                            taskDescriptionController
+                                                .text.isNotEmpty) {
+                                          updateTask(tasks[index]);
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
