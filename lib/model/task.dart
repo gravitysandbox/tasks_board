@@ -1,13 +1,13 @@
 class Task {
   //int? id;
   String? title;
-  String? description;
-  bool? isComplete;
+  String? subtitle;
+  bool? isComplete = false;
 
   Task({
     /*this.id,*/
     this.title,
-    this.description,
+    this.subtitle,
     this.isComplete,
   });
 }

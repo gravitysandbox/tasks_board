@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/simple_input_dialog.dart';
 import '../model/task.dart';
 
 class TaskList extends StatefulWidget {
@@ -10,33 +11,60 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  TextEditingController taskTitleController = TextEditingController();
-  TextEditingController taskDescriptionController = TextEditingController();
-
   List<Task> tasks = [];
+  bool _isEditing = false;
 
-  void createNewTask(String title, String description, bool isComlete) {
-    var task = Task(title: title, description: description, isComplete: false);
-    tasks.add(task);
-    taskTitleController.clear();
-    taskDescriptionController.clear();
+  void _startCreateNewTask(BuildContext context) {
+    _isEditing = false;
+    showDialog(
+      context: context,
+      builder: (_) => SimpleInputDialog(
+        createTask: _createNewTask,
+        isEditing: _isEditing,
+      ),
+    );
   }
 
-  void updateTask(Task task) {
-    task.title = taskTitleController.text;
-    task.description = taskDescriptionController.text;
-    taskTitleController.clear();
-    taskDescriptionController.clear();
+  void _startEditingTask(BuildContext context, Task selectedTask) {
+    _isEditing = true;
+    showDialog(
+      context: context,
+      builder: (_) => SimpleInputDialog(
+        isEditing: _isEditing,
+        task: selectedTask,
+        editTask: _editSelectedTask,
+      ),
+    );
+  }
+
+  void _createNewTask(String taskTitle, String taskSubtitle) {
+    final newTask = Task(
+      title: taskTitle,
+      subtitle: taskSubtitle,
+    );
+    setState(() {
+      tasks.add(newTask);
+    });
+  }
+
+  void _editSelectedTask(
+      Task task, String newTaskTitle, String newTaskSubtitle) {
+    task.title = newTaskTitle;
+    task.subtitle = newTaskSubtitle;
   }
 
   void completeTask(int index) {
-    tasks[index].isComplete == false
-        ? tasks[index].isComplete = true
-        : tasks[index].isComplete = false;
+    setState(() {
+      tasks[index].isComplete == false
+          ? tasks[index].isComplete = true
+          : tasks[index].isComplete = false;
+    });
   }
 
   void deleteTask(int index) {
-    tasks.remove(tasks[index]);
+    setState(() {
+      tasks.remove(tasks[index]);
+    });
   }
 
   @override
@@ -82,9 +110,7 @@ class _TaskListState extends State<TaskList> {
                           child: const Icon(Icons.delete),
                           color: Colors.red,
                         ),
-                        onDismissed: (direction) async {
-                          deleteTask(index);
-                        },
+                        onDismissed: (direction) async => deleteTask(index),
                         child: ListTile(
                           leading: Container(
                             padding: const EdgeInsets.all(2.0),
@@ -111,115 +137,15 @@ class _TaskListState extends State<TaskList> {
                             ),
                           ),
                           subtitle: Text(
-                            tasks[index].description!,
+                            tasks[index].subtitle!,
                             style: const TextStyle(
                               fontSize: 18.0,
                               color: Colors.white,
                             ),
                           ),
-                          onTap: () {
-                            setState(() {
-                              completeTask(index);
-                            });
-                          },
-                          onLongPress: () {
-                            taskTitleController.text = tasks[index].title!;
-                            taskDescriptionController.text =
-                                tasks[index].description!;
-                            showDialog(
-                              context: context,
-                              builder: (context) => SimpleDialog(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 25.0,
-                                  vertical: 20.0,
-                                ),
-                                backgroundColor: Colors.grey[800],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                title: Row(
-                                  children: [
-                                    const Text(
-                                      'Edit Todo',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.cancel,
-                                        color: Colors.grey,
-                                        size: 30.0,
-                                      ),
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                    ),
-                                  ],
-                                ),
-                                children: [
-                                  const Divider(),
-                                  TextFormField(
-                                    controller: taskTitleController,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      height: 1.5,
-                                      color: Colors.white,
-                                    ),
-                                    autofocus: true,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Title',
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    controller: taskDescriptionController,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      height: 1.5,
-                                      color: Colors.white,
-                                    ),
-                                    autofocus: true,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Description',
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20.0),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 50.0,
-                                    child: TextButton(
-                                      child: const Text('Save'),
-                                      style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                        ),
-                                        backgroundColor:
-                                            Theme.of(context).primaryColor,
-                                        primary: Colors.white,
-                                      ),
-                                      onPressed: () async {
-                                        if (taskTitleController
-                                                .text.isNotEmpty &&
-                                            taskDescriptionController
-                                                .text.isNotEmpty) {
-                                          updateTask(tasks[index]);
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                          onTap: () => completeTask(index),
+                          onLongPress: () =>
+                              _startEditingTask(context, tasks[index]),
                         ),
                       );
                     },
@@ -236,95 +162,7 @@ class _TaskListState extends State<TaskList> {
           Icons.add,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => SimpleDialog(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 25.0,
-                vertical: 20.0,
-              ),
-              backgroundColor: Colors.grey[800],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              title: Row(
-                children: [
-                  const Text(
-                    'Add Todo',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.grey,
-                      size: 30.0,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-              children: [
-                const Divider(),
-                TextFormField(
-                  controller: taskTitleController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1.5,
-                    color: Colors.white,
-                  ),
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Title',
-                    hintStyle: TextStyle(color: Colors.white70),
-                    border: InputBorder.none,
-                  ),
-                ),
-                TextFormField(
-                  controller: taskDescriptionController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1.5,
-                    color: Colors.white,
-                  ),
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Description',
-                    hintStyle: TextStyle(color: Colors.white70),
-                    border: InputBorder.none,
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50.0,
-                  child: TextButton(
-                    child: const Text('Add'),
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      backgroundColor: Theme.of(context).primaryColor,
-                      primary: Colors.white,
-                    ),
-                    onPressed: () async {
-                      if (taskTitleController.text.isNotEmpty &&
-                          taskDescriptionController.text.isNotEmpty) {
-                        createNewTask(taskTitleController.text,
-                            taskDescriptionController.text, false);
-                        Navigator.pop(context);
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+        onPressed: () => _startCreateNewTask(context),
       ),
     );
   }
