@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tasks_board/model/task.dart';
+
+import '../model/task.dart';
 
 class DissmissTask extends StatefulWidget {
   final Function? deleteTask;
   final Function? completeTask;
-  final Function? startEditingTask;
-  final List<Task>? tasks;
-  final int index;
+  final Function? editTask;
+  final Task? task;
   const DissmissTask(
-      {Key? key,
-      this.deleteTask,
-      this.tasks,
-      required this.index,
-      this.completeTask,
-      this.startEditingTask})
+      {Key? key, this.deleteTask, this.task, this.completeTask, this.editTask})
       : super(key: key);
 
   @override
@@ -21,16 +16,16 @@ class DissmissTask extends StatefulWidget {
 }
 
 class _DissmissTaskState extends State<DissmissTask> {
-  void deleteTask(int index) {
-    widget.deleteTask!(index);
+  void deleteTask(String id) {
+    widget.deleteTask!(id);
   }
 
-  void completeTask(int index) {
-    widget.completeTask!(index);
+  void completeTask(String id) {
+    widget.completeTask!(id);
   }
 
-  void startEditingTask(BuildContext context, Task selectedTask) {
-    widget.startEditingTask!(context, selectedTask);
+  void editTask(Task selectedTask) {
+    widget.editTask!(selectedTask);
   }
 
   @override
@@ -43,7 +38,7 @@ class _DissmissTaskState extends State<DissmissTask> {
         child: const Icon(Icons.delete),
         color: Colors.red,
       ),
-      onDismissed: (direction) async => deleteTask(widget.index),
+      onDismissed: (direction) async => deleteTask(widget.task!.id),
       child: ListTile(
         leading: Container(
           padding: const EdgeInsets.all(2.0),
@@ -53,8 +48,7 @@ class _DissmissTaskState extends State<DissmissTask> {
             color: Theme.of(context).primaryColor,
             shape: BoxShape.circle,
           ),
-          child: widget.tasks![widget.index].isComplete != null &&
-                  widget.tasks![widget.index].isComplete! == true
+          child: widget.task!.isComplete
               ? const Icon(
                   Icons.check,
                   color: Colors.white,
@@ -62,7 +56,7 @@ class _DissmissTaskState extends State<DissmissTask> {
               : Container(),
         ),
         title: Text(
-          widget.tasks![widget.index].title!,
+          widget.task!.title,
           style: const TextStyle(
             fontSize: 20.0,
             color: Colors.white,
@@ -70,15 +64,14 @@ class _DissmissTaskState extends State<DissmissTask> {
           ),
         ),
         subtitle: Text(
-          widget.tasks![widget.index].subtitle!,
+          widget.task!.subtitle,
           style: const TextStyle(
             fontSize: 18.0,
             color: Colors.white,
           ),
         ),
-        onTap: () => completeTask(widget.index),
-        onLongPress: () =>
-            startEditingTask(context, widget.tasks![widget.index]),
+        onTap: () => completeTask(widget.task!.id),
+        onLongPress: () => editTask(widget.task!),
       ),
     );
   }

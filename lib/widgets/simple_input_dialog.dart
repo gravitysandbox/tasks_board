@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../model/task.dart';
 
 class SimpleInputDialog extends StatefulWidget {
-  final Function? createTask;
-  final Function? editTask;
   final Task? task;
-  final bool? isEditing;
+  final bool isEditing;
   const SimpleInputDialog({
     Key? key,
-    this.createTask,
-    this.editTask,
-    this.isEditing,
     this.task,
+    required this.isEditing,
   }) : super(key: key);
 
   @override
@@ -26,36 +23,28 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
   void _submitData() {
     if (_titleController.text.isNotEmpty &&
         _subtilteController.text.isNotEmpty) {
-      final enteredTitle = _titleController.text;
-      final enteredSubtitle = _subtilteController.text;
-
-      if (widget.isEditing == false) {
-        widget.createTask!(
-          enteredTitle,
-          enteredSubtitle,
-        );
-      } else {
-        widget.editTask!(
-          widget.task,
-          enteredTitle,
-          enteredSubtitle,
-        );
-      }
+      Navigator.of(context).pop(
+        Task(
+          id: widget.isEditing ? widget.task!.id : DateTime.now().toString(),
+          title: _titleController.text,
+          subtitle: _subtilteController.text,
+          isComplete: widget.isEditing ? widget.task!.isComplete : false,
+        ),
+      );
     }
-
-    _titleController.clear();
-    _subtilteController.clear();
-    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.task != null) {
-      _titleController.text = widget.task!.title!;
-      _subtilteController.text = widget.task!.subtitle!;
+      _titleController.text = widget.task!.title;
+      _subtilteController.text = widget.task!.subtitle;
     }
     _titleController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _titleController.text.length));
+      TextPosition(
+        offset: _titleController.text.length,
+      ),
+    );
     return SimpleDialog(
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 25.0,
@@ -68,7 +57,7 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
       title: Row(
         children: [
           Text(
-            widget.isEditing == false ? 'Add Task' : 'Edit Task',
+            widget.isEditing ? 'Edit Task' : 'Add Task',
             style: const TextStyle(
               fontSize: 20.0,
               color: Colors.white,

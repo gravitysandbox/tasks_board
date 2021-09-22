@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tasks_board/widgets/dissmiss_task.dart';
 
+import '../widgets/dissmiss_task.dart';
 import '../widgets/simple_input_dialog.dart';
 import '../model/task.dart';
 
@@ -13,59 +13,39 @@ class TaskList extends StatefulWidget {
 
 class _TaskListState extends State<TaskList> {
   List<Task> tasks = [];
-  bool _isEditing = false;
 
-  void _startCreateNewTask(BuildContext context) {
-    _isEditing = false;
-    showDialog(
+  void _createTask() async {
+    final createdTask = await showDialog(
       context: context,
-      builder: (_) => SimpleInputDialog(
-        createTask: _createNewTask,
-        isEditing: _isEditing,
+      builder: (_) => const SimpleInputDialog(
+        isEditing: false,
       ),
     );
+    tasks.add(createdTask);
+    setState(() {});
   }
 
-  void _startEditingTask(BuildContext context, Task selectedTask) {
-    _isEditing = true;
-    showDialog(
+  void _editTask(Task selectedTask) async {
+    final editedTask = await showDialog<Task>(
       context: context,
       builder: (_) => SimpleInputDialog(
-        isEditing: _isEditing,
         task: selectedTask,
-        editTask: _editSelectedTask,
+        isEditing: true,
       ),
     );
+    tasks[tasks.indexWhere((e) => e.id == editedTask!.id)] = editedTask!;
+    setState(() {});
   }
 
-  void _createNewTask(String taskTitle, String taskSubtitle) {
-    final newTask = Task(
-      title: taskTitle,
-      subtitle: taskSubtitle,
-    );
-    setState(() {
-      tasks.add(newTask);
-    });
+  void _completeTask(String id) {
+    var index = tasks.indexWhere((element) => element.id == id);
+    tasks[index].isComplete = !tasks[index].isComplete;
+    setState(() {});
   }
 
-  void _editSelectedTask(
-      Task task, String newTaskTitle, String newTaskSubtitle) {
-    task.title = newTaskTitle;
-    task.subtitle = newTaskSubtitle;
-  }
-
-  void _completeTask(int index) {
-    setState(() {
-      tasks[index].isComplete == false
-          ? tasks[index].isComplete = true
-          : tasks[index].isComplete = false;
-    });
-  }
-
-  void _deleteTask(int index) {
-    setState(() {
-      tasks.remove(tasks[index]);
-    });
+  void _deleteTask(String id) {
+    tasks.removeWhere((t) => t.id == id);
+    setState(() {});
   }
 
   @override
@@ -104,12 +84,10 @@ class _TaskListState extends State<TaskList> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       return DissmissTask(
-                        key: Key(tasks[index].title!),
-                        tasks: tasks,
-                        index: index,
+                        task: tasks[index],
                         deleteTask: _deleteTask,
                         completeTask: _completeTask,
-                        startEditingTask: _startEditingTask,
+                        editTask: _editTask,
                       );
                     },
                   ),
@@ -125,7 +103,7 @@ class _TaskListState extends State<TaskList> {
           Icons.add,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () => _startCreateNewTask(context),
+        onPressed: () => _createTask(),
       ),
     );
   }
