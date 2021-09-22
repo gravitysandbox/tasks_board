@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasks_board/widgets/dissmiss_task.dart';
 
 import '../widgets/simple_input_dialog.dart';
 import '../model/task.dart';
@@ -53,7 +54,7 @@ class _TaskListState extends State<TaskList> {
     task.subtitle = newTaskSubtitle;
   }
 
-  void completeTask(int index) {
+  void _completeTask(int index) {
     setState(() {
       tasks[index].isComplete == false
           ? tasks[index].isComplete = true
@@ -61,7 +62,7 @@ class _TaskListState extends State<TaskList> {
     });
   }
 
-  void deleteTask(int index) {
+  void _deleteTask(int index) {
     setState(() {
       tasks.remove(tasks[index]);
     });
@@ -102,51 +103,13 @@ class _TaskListState extends State<TaskList> {
                     shrinkWrap: true,
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
-                      return Dismissible(
+                      return DissmissTask(
                         key: Key(tasks[index].title!),
-                        background: Container(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          alignment: Alignment.centerLeft,
-                          child: const Icon(Icons.delete),
-                          color: Colors.red,
-                        ),
-                        onDismissed: (direction) async => deleteTask(index),
-                        child: ListTile(
-                          leading: Container(
-                            padding: const EdgeInsets.all(2.0),
-                            height: 30.0,
-                            width: 30.0,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: tasks[index].isComplete != null &&
-                                    tasks[index].isComplete! == true
-                                ? const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  )
-                                : Container(),
-                          ),
-                          title: Text(
-                            tasks[index].title!,
-                            style: const TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Text(
-                            tasks[index].subtitle!,
-                            style: const TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () => completeTask(index),
-                          onLongPress: () =>
-                              _startEditingTask(context, tasks[index]),
-                        ),
+                        tasks: tasks,
+                        index: index,
+                        deleteTask: _deleteTask,
+                        completeTask: _completeTask,
+                        startEditingTask: _startEditingTask,
                       );
                     },
                   ),
