@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../model/task.dart';
+import '../../../domain/model/task_item.dart';
 
-class SimpleInputDialog extends StatefulWidget {
-  final Task? task;
+class InputDialog extends StatefulWidget {
+  final TaskItem? task;
   final bool isEditing;
-  const SimpleInputDialog({
+  const InputDialog({
     Key? key,
     this.task,
     required this.isEditing,
   }) : super(key: key);
 
   @override
-  _SimpleInputDialogState createState() => _SimpleInputDialogState();
+  _InputDialogState createState() => _InputDialogState();
 }
 
-class _SimpleInputDialogState extends State<SimpleInputDialog> {
+class _InputDialogState extends State<InputDialog> {
   final _titleController = TextEditingController();
   final _subtilteController = TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -24,7 +24,7 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
     if (_titleController.text.isNotEmpty &&
         _subtilteController.text.isNotEmpty) {
       Navigator.of(context).pop(
-        Task(
+        TaskItem(
           id: widget.isEditing ? widget.task!.id : DateTime.now().toString(),
           title: _titleController.text,
           subtitle: _subtilteController.text,

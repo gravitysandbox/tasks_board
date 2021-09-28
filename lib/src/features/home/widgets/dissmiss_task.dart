@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../model/task.dart';
+import '../../../domain/model/task_item.dart';
 
 class DissmissTask extends StatefulWidget {
   final Function? deleteTask;
   final Function? completeTask;
   final Function? editTask;
-  final Task? task;
+  final TaskItem? task;
   const DissmissTask(
       {Key? key, this.deleteTask, this.task, this.completeTask, this.editTask})
       : super(key: key);
@@ -24,7 +24,7 @@ class _DissmissTaskState extends State<DissmissTask> {
     widget.completeTask!(id);
   }
 
-  void editTask(Task selectedTask) {
+  void editTask(TaskItem selectedTask) {
     widget.editTask!(selectedTask);
   }
 

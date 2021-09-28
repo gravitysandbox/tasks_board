@@ -1,22 +1,22 @@
-class Task {
+class TaskItem {
   final String id;
   String title;
   String subtitle;
   bool isComplete;
 
-  Task({
+  TaskItem({
     required this.id,
     required this.title,
     required this.subtitle,
     required this.isComplete,
   });
 
-  Task copyWith({
+  TaskItem copyWith({
     String? title,
     String? subtitle,
     bool? isComplete,
   }) {
-    return Task(
+    return TaskItem(
       id: id,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
