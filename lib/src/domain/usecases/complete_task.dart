@@ -12,7 +12,7 @@ class CompleteTask extends UserCase<Either<Failure, bool>, String> {
   @override
   Future<Either<Failure, bool>> call(String params) async {
     bloc.add(
-      TaskComplete(
+      TaskItemComplete(
         id: params,
       ),
     );

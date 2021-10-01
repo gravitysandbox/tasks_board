@@ -13,7 +13,7 @@ class EditTask implements UserCase<Either<Failure, bool>, TaskItem> {
   @override
   Future<Either<Failure, bool>> call(TaskItem editedTask) async {
     bloc.add(
-      TaskEdit(
+      TaskItemEdit(
         task: editedTask,
       ),
     );

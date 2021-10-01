@@ -1,12 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasks_board/locator.dart';
 
 import '/src/domain/bloc/task_bloc.dart';
 import '/src/features/home/screens/home_screen.dart';
+import 'src/domain/usecases/read_tasks.dart';
+import 'src/domain/model/usecase.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   initLocator();
+  Firebase.initializeApp().then((_) {
+    locator<ReadTasks>().call(NoParams());
+  });
   runApp(const MyApp());
 }
 

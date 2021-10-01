@@ -6,25 +6,26 @@ import '/src/domain/bloc/task_bloc.dart';
 import '/src/domain/model/failure.dart';
 import '/src/domain/model/usecase.dart';
 import '/src/domain/repositories/database.dart';
-import '../model/task_item.dart';
 
-class CreateTask implements UserCase<Either<Failure, dynamic>, TaskItem> {
+class ReadTasks implements UserCase<Either<Failure, dynamic>, NoParams> {
   final TaskBloc bloc;
   final DatabaseHelper databaseHelper;
 
-  CreateTask({
+  ReadTasks({
     required this.bloc,
     required this.databaseHelper,
   });
 
   @override
-  Future<Either<Failure, bool>> call(TaskItem createdTask) async {
-    final databaseRequest = await databaseHelper.createTask(createdTask);
+  Future<Either<Failure, bool>> call(NoParams params) async {
+    final databaseRequest = await databaseHelper.readTasks();
     databaseRequest.fold(
-      (l) => log('CreateTask failure: ${l.message}'),
+      (l) => log(
+        'CreateTask failure: ${l.message}',
+      ),
       (r) => bloc.add(
-        TaskItemCreate(
-          task: createdTask,
+        TaskItemRead(
+          tasks: [...r],
         ),
       ),
     );

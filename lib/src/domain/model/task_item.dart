@@ -23,4 +23,21 @@ class TaskItem {
       isComplete: isComplete ?? this.isComplete,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'subtitle': subtitle,
+      'isComlete': isComplete,
+    };
+  }
+
+  TaskItem.fromJson(Map<String, dynamic> json)
+      : this(
+          id: json['id'] as String,
+          title: json['title'] as String,
+          subtitle: json['subtitle'] as String,
+          isComplete: json['isComplete'] as bool,
+        );
 }

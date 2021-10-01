@@ -13,27 +13,33 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   @override
   Stream<TaskState> mapEventToState(TaskEvent event) async* {
     switch (event.runtimeType) {
-      case TaskCreate:
+      case TaskItemCreate:
         {
-          var snapshot = event as TaskCreate;
+          var snapshot = event as TaskItemCreate;
           yield state.createTask(snapshot.task);
           break;
         }
-      case TaskComplete:
+      case TaskItemRead:
         {
-          var snapshot = event as TaskComplete;
+          var snapshot = event as TaskItemRead;
+          yield state.readTasks(snapshot.tasks);
+          break;
+        }
+      case TaskItemComplete:
+        {
+          var snapshot = event as TaskItemComplete;
           yield state.completeTask(snapshot.id);
           break;
         }
-      case TaskEdit:
+      case TaskItemEdit:
         {
-          var snapshot = event as TaskEdit;
+          var snapshot = event as TaskItemEdit;
           yield state.editTask(snapshot.task);
           break;
         }
-      case TaskDelete:
+      case TaskItemDelete:
         {
-          var snapshot = event as TaskDelete;
+          var snapshot = event as TaskItemDelete;
           yield state.deleteTask(snapshot.id);
           break;
         }

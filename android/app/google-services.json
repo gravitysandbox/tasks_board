@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "205823334245",
+    "project_id": "tasks-board-312da",
+    "storage_bucket": "tasks-board-312da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205823334245:android:589a1d27bcce57bd2af38c",
+        "android_client_info": {
+          "package_name": "com.example.tasks_board"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205823334245-21canctke7aov2ed6i1kemhi97sue7ij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGiCw7ZdFsFBVaHs9JV8RAjvLZTEX6gU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205823334245-21canctke7aov2ed6i1kemhi97sue7ij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

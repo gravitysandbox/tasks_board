@@ -12,7 +12,7 @@ class DeleteTask extends UserCase<Either<Failure, dynamic>, String> {
   @override
   Future<Either<Failure, bool>> call(String params) async {
     bloc.add(
-      TaskDelete(
+      TaskItemDelete(
         id: params,
       ),
     );

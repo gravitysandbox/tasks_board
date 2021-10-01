@@ -14,6 +14,10 @@ class TaskState {
     return TaskState(tasks: tasks, event: TaskEventType.create);
   }
 
+  TaskState readTasks(List<TaskItem> tasks) {
+    return TaskState(tasks: tasks, event: TaskEventType.read);
+  }
+
   TaskState completeTask(String id) {
     var index = tasks.indexWhere((element) => element.id == id);
     tasks[index].isComplete = !tasks[index].isComplete;
