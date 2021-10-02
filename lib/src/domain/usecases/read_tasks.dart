@@ -7,7 +7,7 @@ import '/src/domain/model/failure.dart';
 import '/src/domain/model/usecase.dart';
 import '/src/domain/repositories/database.dart';
 
-class ReadTasks implements UserCase<Either<Failure, dynamic>, NoParams> {
+class ReadTasks implements UserCase<Either<Failure, void>, NoParams> {
   final TaskBloc bloc;
   final DatabaseHelper databaseHelper;
 
@@ -18,10 +18,11 @@ class ReadTasks implements UserCase<Either<Failure, dynamic>, NoParams> {
 
   @override
   Future<Either<Failure, bool>> call(NoParams params) async {
+    log('ReadItems call');
     final databaseRequest = await databaseHelper.readTasks();
     databaseRequest.fold(
       (l) => log(
-        'CreateTask failure: ${l.message}',
+        'ReadTask failure: ${l.message}',
       ),
       (r) => bloc.add(
         TaskItemRead(

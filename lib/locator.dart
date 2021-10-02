@@ -42,12 +42,14 @@ void initLocator() {
   locator.registerLazySingleton(
     () => CompleteTask(
       bloc: locator<TaskBloc>(),
+      databaseHelper: locator<DatabaseHelper>(),
     ),
   );
 
   locator.registerLazySingleton(
     () => EditTask(
       bloc: locator<TaskBloc>(),
+      databaseHelper: locator<DatabaseHelper>(),
     ),
   );
 
