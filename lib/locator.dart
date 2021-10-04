@@ -56,6 +56,7 @@ void initLocator() {
   locator.registerLazySingleton(
     () => DeleteTask(
       bloc: locator<TaskBloc>(),
+      databaseHelper: locator<DatabaseHelper>(),
     ),
   );
 }

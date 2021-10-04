@@ -15,9 +15,10 @@ class CompleteTask extends UserCase<Either<Failure, bool>, String> {
 
   @override
   Future<Either<Failure, bool>> call(String params) async {
+    log('CompleteTask() call');
     final databaseRequest = await databaseHelper.completeTask(params);
     databaseRequest.fold(
-      (l) => log('CompleteTask failure: ${l.message}'),
+      (l) => log('CompleteTask() failure: ${l.message}'),
       (r) => bloc.add(
         TaskItemComplete(
           id: params,
