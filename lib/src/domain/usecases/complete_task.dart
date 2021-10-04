@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:tasks_board/src/domain/repositories/database.dart';
 
+import '/src/domain/repositories/database.dart';
 import '/src/domain/bloc/task_bloc.dart';
 import '/src/domain/model/failure.dart';
 import '/src/domain/model/usecase.dart';
@@ -25,7 +25,6 @@ class CompleteTask extends UserCase<Either<Failure, bool>, String> {
         ),
       ),
     );
-
     return const Right(true);
   }
 }

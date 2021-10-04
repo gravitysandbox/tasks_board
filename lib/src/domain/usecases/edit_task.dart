@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:tasks_board/src/domain/repositories/database.dart';
 
+import '/src/domain/repositories/database.dart';
 import '/src/domain/bloc/task_bloc.dart';
 import '/src/domain/model/failure.dart';
 import '/src/domain/model/usecase.dart';
@@ -16,16 +16,16 @@ class EditTask implements UserCase<Either<Failure, bool>, TaskItem> {
 
   @override
   Future<Either<Failure, bool>> call(TaskItem editedTask) async {
+    log('EditTask() call');
     final databaseRequest = await databaseHelper.editTask(editedTask);
     databaseRequest.fold(
-      (l) => log('EditTask failure: ${l.message}'),
+      (l) => log('EditTask() failure: ${l.message}'),
       (r) => bloc.add(
         TaskItemEdit(
           task: editedTask,
         ),
       ),
     );
-
     return const Right(true);
   }
 }

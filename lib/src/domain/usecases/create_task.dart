@@ -19,16 +19,16 @@ class CreateTask implements UserCase<Either<Failure, dynamic>, TaskItem> {
 
   @override
   Future<Either<Failure, bool>> call(TaskItem createdTask) async {
+    log('CreateTask() call');
     final databaseRequest = await databaseHelper.createTask(createdTask);
     databaseRequest.fold(
-      (l) => log('CreateTask failure: ${l.message}'),
+      (l) => log('CreateTask() failure: ${l.message}'),
       (r) => bloc.add(
         TaskItemCreate(
           task: createdTask,
         ),
       ),
     );
-
     return const Right(true);
   }
 }

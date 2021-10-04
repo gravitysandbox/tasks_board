@@ -16,16 +16,16 @@ class DissmissTask extends StatefulWidget {
 }
 
 class _DissmissTaskState extends State<DissmissTask> {
-  void deleteTask(String id) {
-    widget.deleteTask!(id);
-  }
-
   void completeTask(String id) {
     widget.completeTask!(id);
   }
 
   void editTask(TaskItem selectedTask) {
     widget.editTask!(selectedTask);
+  }
+
+  void deleteTask(String id) {
+    widget.deleteTask!(id);
   }
 
   @override

@@ -18,11 +18,11 @@ class ReadTasks implements UserCase<Either<Failure, void>, NoParams> {
 
   @override
   Future<Either<Failure, bool>> call(NoParams params) async {
-    log('ReadItems call');
+    log('ReadItems() call');
     final databaseRequest = await databaseHelper.readTasks();
     databaseRequest.fold(
       (l) => log(
-        'ReadTask failure: ${l.message}',
+        'ReadTask() failure: ${l.message}',
       ),
       (r) => bloc.add(
         TaskItemRead(
@@ -30,7 +30,6 @@ class ReadTasks implements UserCase<Either<Failure, void>, NoParams> {
         ),
       ),
     );
-
     return const Right(true);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:tasks_board/src/domain/repositories/database.dart';
-import 'package:tasks_board/src/domain/usecases/read_tasks.dart';
 
+import '/src/domain/repositories/database.dart';
+import '/src/domain/usecases/read_tasks.dart';
 import '../src/domain/bloc/task_bloc.dart';
 import '../src/domain/usecases/create_task.dart';
 import '../src/domain/usecases/edit_task.dart';
@@ -26,14 +26,14 @@ void initLocator() {
 
   // Usecases
   locator.registerLazySingleton(
-    () => ReadTasks(
+    () => CreateTask(
       bloc: locator<TaskBloc>(),
       databaseHelper: locator<DatabaseHelper>(),
     ),
   );
 
   locator.registerLazySingleton(
-    () => CreateTask(
+    () => ReadTasks(
       bloc: locator<TaskBloc>(),
       databaseHelper: locator<DatabaseHelper>(),
     ),

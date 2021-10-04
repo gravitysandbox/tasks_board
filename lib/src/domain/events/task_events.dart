@@ -1,8 +1,8 @@
 part of '../bloc/task_bloc.dart';
 
 enum TaskEventType {
-  read,
   create,
+  read,
   complete,
   edit,
   delete,
@@ -15,15 +15,6 @@ abstract class TaskEvent extends Equatable {
   const TaskEvent(this.type, [List props = const []]) : super();
 }
 
-class TaskItemRead extends TaskEvent {
-  final List<TaskItem> tasks;
-
-  TaskItemRead({required this.tasks}) : super(TaskEventType.read, [tasks]);
-
-  @override
-  List<Object?> get props => tasks;
-}
-
 class TaskItemCreate extends TaskEvent {
   final TaskItem task;
 
@@ -32,6 +23,15 @@ class TaskItemCreate extends TaskEvent {
   @override
   List<Object?> get props =>
       [task.id, task.title, task.subtitle, task.isComplete];
+}
+
+class TaskItemRead extends TaskEvent {
+  final List<TaskItem> tasks;
+
+  TaskItemRead({required this.tasks}) : super(TaskEventType.read, [tasks]);
+
+  @override
+  List<Object?> get props => tasks;
 }
 
 class TaskItemComplete extends TaskEvent {

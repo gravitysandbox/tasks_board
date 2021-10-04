@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasks_board/locator.dart';
-import 'package:tasks_board/src/domain/model/usecase.dart';
-import 'package:tasks_board/src/domain/usecases/read_tasks.dart';
-import 'package:tasks_board/src/features/home/widgets/nothing_to_show.dart';
 
 import '/src/domain/bloc/task_bloc.dart';
+import '/src/domain/model/usecase.dart';
 import '/src/domain/usecases/create_task.dart';
+import '/src/domain/usecases/read_tasks.dart';
 import '/src/domain/usecases/complete_task.dart';
 import '/src/domain/usecases/edit_task.dart';
 import '/src/domain/usecases/delete_task.dart';
 import '../widgets/dissmiss_task.dart';
 import '../widgets/input_dialog.dart';
+import '../widgets/nothing_to_show.dart';
 import '../../../domain/model/task_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,6 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _readTasks() {
+    locator<ReadTasks>().call(NoParams());
+  }
+
+  void _completeTask(String id) {
+    locator<CompleteTask>().call(id);
+  }
+
   void _editTask(TaskItem selectedTask) async {
     final editedTask = await showDialog<TaskItem>(
       context: context,
@@ -45,22 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
     locator<EditTask>().call(editedTask!);
   }
 
-  void _completeTask(String id) {
-    locator<CompleteTask>().call(id);
-  }
-
-  void _readTasks() {
-    locator<ReadTasks>().call(NoParams());
-  }
-
   void _deleteTask(String id) {
     locator<DeleteTask>().call(id);
   }
 
   SnackBar _buildSnackBar(TaskEventType event) {
     final Map<TaskEventType, String> snackText = {
-      TaskEventType.read: 'Refreshed',
       TaskEventType.create: 'Created',
+      TaskEventType.read: 'Refreshed',
       TaskEventType.complete: 'Completed',
       TaskEventType.edit: 'Edited',
       TaskEventType.delete: 'Deleted',
