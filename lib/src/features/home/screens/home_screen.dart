@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasks_board/locator.dart';
+import 'package:tasks_board/src/domain/model/usecase.dart';
+import 'package:tasks_board/src/domain/usecases/read_tasks.dart';
+import 'package:tasks_board/src/features/home/widgets/nothing_to_show.dart';
 
 import '/src/domain/bloc/task_bloc.dart';
 import '/src/domain/usecases/create_task.dart';
@@ -46,12 +49,17 @@ class _HomeScreenState extends State<HomeScreen> {
     locator<CompleteTask>().call(id);
   }
 
+  void _readTasks() {
+    locator<ReadTasks>().call(NoParams());
+  }
+
   void _deleteTask(String id) {
     locator<DeleteTask>().call(id);
   }
 
   SnackBar _buildSnackBar(TaskEventType event) {
     final Map<TaskEventType, String> snackText = {
+      TaskEventType.read: 'Refreshed',
       TaskEventType.create: 'Created',
       TaskEventType.complete: 'Completed',
       TaskEventType.edit: 'Edited',
@@ -80,13 +88,23 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tasks Board',
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Tasks Board',
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _readTasks,
+                        icon: const Icon(Icons.refresh),
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10.0),
                   const Divider(
@@ -97,22 +115,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     keyboardDismissBehavior:
                         ScrollViewKeyboardDismissBehavior.onDrag,
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.78,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) => const Divider(
-                          color: Colors.grey,
-                        ),
-                        shrinkWrap: true,
-                        itemCount: state.tasks.length,
-                        itemBuilder: (context, index) {
-                          return DissmissTask(
-                            task: state.tasks[index],
-                            deleteTask: _deleteTask,
-                            completeTask: _completeTask,
-                            editTask: _editTask,
-                          );
-                        },
-                      ),
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      child: state.tasks.isNotEmpty
+                          ? ListView.separated(
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
+                                color: Colors.grey,
+                              ),
+                              shrinkWrap: true,
+                              itemCount: state.tasks.length,
+                              itemBuilder: (context, index) {
+                                return DissmissTask(
+                                  task: state.tasks[index],
+                                  deleteTask: _deleteTask,
+                                  completeTask: _completeTask,
+                                  editTask: _editTask,
+                                );
+                              },
+                            )
+                          : const NothingToShow(),
                     ),
                   ),
                 ],

@@ -29,7 +29,7 @@ class TaskItem {
       'id': id,
       'title': title,
       'subtitle': subtitle,
-      'isComlete': isComplete,
+      'isComplete': isComplete,
     };
   }
 
