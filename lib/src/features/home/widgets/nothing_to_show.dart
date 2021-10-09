@@ -11,8 +11,8 @@ class NothingToShow extends StatelessWidget {
           const Text(
             'Nothing to show yet.',
             style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.grey,
+              fontSize: 25.0,
+              color: Color(0xFF424242),
             ),
           ),
           const SizedBox(
